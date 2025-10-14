@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://glnuyhl5cadr"]
+
+[ext_resource type="Script" uid="uid://bcdnfhbupy12v" path="res://Scripts/XRSetup.gd" id="1_nxxrv"]
+[ext_resource type="Material" uid="uid://cwaah36y2udnn" path="res://Materials/Green.tres" id="1_qlprq"]
+
+[sub_resource type="Environment" id="Environment_tl8lk"]
+fog_light_energy = 0.31
+fog_density = 0.0745
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ndu7m"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_nxxrv")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tl8lk")
+camera_attributes = SubResource("CameraAttributesPractical_ndu7m")
+
+[node name="Floor" type="CSGBox3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+material_override = ExtResource("1_qlprq")
+size = Vector3(100, 0.1, 100)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.9963155, -0.03231259, -0.07944493, 0.085764766, 0.37536964, 0.92289877, -4.8139475e-09, -0.9263118, 0.37675786, 0, 6.055937, 0)
+light_color = Color(0.89982086, 0.8602584, 1.1551381e-06, 1)
+shadow_enabled = true
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 12.409)
+current = true
+
+[node name="RightHand" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -0.5)
+tracker = &"right_hand"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/RightHand"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="LeftHand" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, -0.5)
+tracker = &"left_hand"
+
+[node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/LeftHand"]
+size = Vector3(0.1, 0.1, 0.1)
