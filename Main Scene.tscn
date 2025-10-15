@@ -1,13 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://glnuyhl5cadr"]
+[gd_scene load_steps=13 format=3 uid="uid://glnuyhl5cadr"]
 
 [ext_resource type="Script" uid="uid://bcdnfhbupy12v" path="res://Scripts/XRSetup.gd" id="1_nxxrv"]
-[ext_resource type="Material" uid="uid://cwaah36y2udnn" path="res://Materials/Green.tres" id="1_qlprq"]
+[ext_resource type="Script" uid="uid://beihex856cyuf" path="res://Scripts/BlockPath.gd" id="2_h4phd"]
+[ext_resource type="PackedScene" uid="uid://cnblc2h6l1t1i" path="res://Scenes/cube.tscn" id="3_pey1u"]
+[ext_resource type="Material" uid="uid://b6mpm6qnjlsle" path="res://Materials/BlueLaser.tres" id="3_t0tp6"]
+[ext_resource type="Script" uid="uid://df6ch88u17eux" path="res://Scripts/RayRight.gd" id="3_ww3rf"]
+[ext_resource type="Script" uid="uid://bg65u7nwekear" path="res://Scripts/LineRenderer.gd" id="4_t0tp6"]
+[ext_resource type="Script" uid="uid://hysmjaws33iu" path="res://Scripts/RayLeft.gd" id="5_qg7el"]
+[ext_resource type="Material" uid="uid://cfq0vkfdl2430" path="res://Materials/RedLaser.tres" id="5_t0tp6"]
 
 [sub_resource type="Environment" id="Environment_tl8lk"]
+background_mode = 1
 fog_light_energy = 0.31
 fog_density = 0.0745
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ndu7m"]
+
+[sub_resource type="Curve3D" id="Curve3D_qg7el"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_qg7el"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nxxrv")
@@ -16,15 +32,23 @@ script = ExtResource("1_nxxrv")
 environment = SubResource("Environment_tl8lk")
 camera_attributes = SubResource("CameraAttributesPractical_ndu7m")
 
-[node name="Floor" type="CSGBox3D" parent="WorldEnvironment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
-material_override = ExtResource("1_qlprq")
-size = Vector3(100, 0.1, 100)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
-transform = Transform3D(0.9963155, -0.03231259, -0.07944493, 0.085764766, 0.37536964, 0.92289877, -4.8139475e-09, -0.9263118, 0.37675786, 0, 6.055937, 0)
-light_color = Color(0.89982086, 0.8602584, 1.1551381e-06, 1)
+transform = Transform3D(0.9963155, -0.032312546, -0.07944491, 0.079069175, -0.012746364, 0.9967877, -0.03322139, -0.99939656, -0.010144472, 0.23838997, 5.6539893, 0.89463526)
 shadow_enabled = true
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.69761544, 0, 0.7164725, 0, 1, 0, -0.7164725, 0, 0.69761544, 6.4644003, 1.4526021, 0)
+
+[node name="Path3D" type="Path3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -17.368006)
+curve = SubResource("Curve3D_qg7el")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="WorldEnvironment/Path3D"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+script = ExtResource("2_h4phd")
+
+[node name="Cube" parent="WorldEnvironment/Path3D/PathFollow3D" instance=ExtResource("3_pey1u")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -2.360623, 1.2068686, -2.3680058)
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
 
@@ -35,13 +59,28 @@ current = true
 [node name="RightHand" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -0.5)
 tracker = &"right_hand"
+script = ExtResource("3_ww3rf")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/RightHand"]
 size = Vector3(0.1, 0.1, 0.1)
 
+[node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/RightHand"]
+material_override = ExtResource("3_t0tp6")
+mesh = SubResource("ImmediateMesh_qg7el")
+script = ExtResource("4_t0tp6")
+
 [node name="LeftHand" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, -0.5)
 tracker = &"left_hand"
+script = ExtResource("5_qg7el")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/LeftHand"]
 size = Vector3(0.1, 0.1, 0.1)
+
+[node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/LeftHand"]
+material_override = ExtResource("5_t0tp6")
+mesh = SubResource("ImmediateMesh_qg7el")
+script = ExtResource("4_t0tp6")
+
+[connection signal="button_pressed" from="XROrigin3D/RightHand" to="XROrigin3D/RightHand" method="_on_button_pressed"]
+[connection signal="button_pressed" from="XROrigin3D/LeftHand" to="XROrigin3D/LeftHand" method="_on_button_pressed"]
