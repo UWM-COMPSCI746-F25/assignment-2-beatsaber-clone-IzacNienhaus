@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://glnuyhl5cadr"]
+[gd_scene load_steps=14 format=3 uid="uid://glnuyhl5cadr"]
 
 [ext_resource type="Script" uid="uid://bcdnfhbupy12v" path="res://Scripts/XRSetup.gd" id="1_nxxrv"]
 [ext_resource type="Script" uid="uid://beihex856cyuf" path="res://Scripts/BlockPath.gd" id="2_h4phd"]
@@ -23,7 +23,9 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_qg7el"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_0ejt0"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_pey1u"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nxxrv")
@@ -66,7 +68,7 @@ size = Vector3(0.1, 0.1, 0.1)
 
 [node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/RightHand"]
 material_override = ExtResource("3_t0tp6")
-mesh = SubResource("ImmediateMesh_qg7el")
+mesh = SubResource("ImmediateMesh_0ejt0")
 script = ExtResource("4_t0tp6")
 
 [node name="LeftHand" type="XRController3D" parent="XROrigin3D"]
@@ -79,7 +81,7 @@ size = Vector3(0.1, 0.1, 0.1)
 
 [node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/LeftHand"]
 material_override = ExtResource("5_t0tp6")
-mesh = SubResource("ImmediateMesh_qg7el")
+mesh = SubResource("ImmediateMesh_pey1u")
 script = ExtResource("4_t0tp6")
 
 [connection signal="button_pressed" from="XROrigin3D/RightHand" to="XROrigin3D/RightHand" method="_on_button_pressed"]

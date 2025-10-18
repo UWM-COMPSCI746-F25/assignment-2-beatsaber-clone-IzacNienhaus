@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var raycast_length = 5
+@export var raycast_length = 3
 
 func _physics_process(delta: float):
 	var space_state = get_world_3d().direct_space_state
@@ -17,7 +17,7 @@ func _physics_process(delta: float):
 	$"LineRenderer".points[1] = end
 
 
-func _on_button_pressed(name: String) -> void:
+func _on_button_pressed(name):
 	if name == "ax_button":
 		if $"LineRenderer".visible == true:
 			$"LineRenderer".visible = false

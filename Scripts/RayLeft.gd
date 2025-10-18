@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var raycast_length = 5
+@export var raycast_length = 3
 
 func _physics_process(delta: float):
 	var space_state = get_world_3d().direct_space_state
