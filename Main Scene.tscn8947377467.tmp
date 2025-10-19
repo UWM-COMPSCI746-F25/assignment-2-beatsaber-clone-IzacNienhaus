@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://glnuyhl5cadr"]
+[gd_scene load_steps=12 format=3 uid="uid://glnuyhl5cadr"]
 
 [ext_resource type="Script" uid="uid://bcdnfhbupy12v" path="res://Scripts/XRSetup.gd" id="1_nxxrv"]
+[ext_resource type="Script" uid="uid://beihex856cyuf" path="res://Scripts/BlockPath.gd" id="2_h4phd"]
+[ext_resource type="PackedScene" uid="uid://cnblc2h6l1t1i" path="res://Scenes/cube.tscn" id="3_pey1u"]
 [ext_resource type="Material" uid="uid://b6mpm6qnjlsle" path="res://Materials/BlueLaser.tres" id="3_t0tp6"]
 [ext_resource type="Script" uid="uid://cmdalvnl0jsfw" path="res://Scripts/Laser.gd" id="4_qg7el"]
 [ext_resource type="Material" uid="uid://cfq0vkfdl2430" path="res://Materials/RedLaser.tres" id="5_t0tp6"]
-[ext_resource type="Script" uid="uid://d1fucwpkciy6s" path="res://Scripts/CubeGen.gd" id="6_qg7el"]
 
 [sub_resource type="Environment" id="Environment_tl8lk"]
 background_mode = 1
@@ -13,16 +14,16 @@ fog_density = 0.0745
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ndu7m"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_qg7el"]
-size = Vector3(10, 10, 1)
+[sub_resource type="Curve3D" id="Curve3D_qg7el"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_qg7el"]
-height = 1.0
-radius = 0.05
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_h4phd"]
-height = 1.0
-radius = 0.05
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nxxrv")
@@ -38,16 +39,21 @@ shadow_enabled = true
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(0.69761544, 0, 0.7164725, 0, 1, 0, -0.7164725, 0, 0.69761544, 6.4644003, 1.4526021, 0)
 
-[node name="backdrop" type="Area3D" parent="WorldEnvironment"]
+[node name="Path3D" type="Path3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -17.368006)
+curve = SubResource("Curve3D_qg7el")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldEnvironment/backdrop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.7330191)
-shape = SubResource("BoxShape3D_qg7el")
+[node name="PathFollow3D" type="PathFollow3D" parent="WorldEnvironment/Path3D"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+script = ExtResource("2_h4phd")
+
+[node name="Cube" parent="WorldEnvironment/Path3D/PathFollow3D" instance=ExtResource("3_pey1u")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -2.360623, 1.2068686, -2.3680058)
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 12.409)
 current = true
 
 [node name="RightHand" type="XRController3D" parent="XROrigin3D"]
@@ -56,18 +62,17 @@ tracker = &"right_hand"
 script = ExtResource("4_qg7el")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/RightHand"]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Laser" type="CSGCylinder3D" parent="XROrigin3D/RightHand/CSGBox3D"]
+[node name="Laser" type="CSGCylinder3D" parent="XROrigin3D/RightHand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 radius = 0.05
 height = 1.0
 material = ExtResource("3_t0tp6")
 
-[node name="rightArea" type="Area3D" parent="XROrigin3D/RightHand/CSGBox3D/Laser"]
+[node name="Area3D" type="Area3D" parent="XROrigin3D/RightHand/Laser"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/RightHand/CSGBox3D/Laser/rightArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/RightHand/Laser/Area3D"]
 shape = SubResource("CylinderShape3D_qg7el")
 
 [node name="LeftHand" type="XRController3D" parent="XROrigin3D"]
@@ -76,28 +81,18 @@ tracker = &"left_hand"
 script = ExtResource("4_qg7el")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="XROrigin3D/LeftHand"]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Laser" type="CSGCylinder3D" parent="XROrigin3D/LeftHand/CSGBox3D"]
+[node name="Laser" type="CSGCylinder3D" parent="XROrigin3D/LeftHand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 radius = 0.05
 height = 1.0
 material = ExtResource("5_t0tp6")
 
-[node name="leftArea" type="Area3D" parent="XROrigin3D/LeftHand/CSGBox3D/Laser"]
+[node name="Area3D" type="Area3D" parent="XROrigin3D/LeftHand/Laser"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/LeftHand/CSGBox3D/Laser/leftArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/LeftHand/Laser/Area3D"]
 shape = SubResource("CylinderShape3D_h4phd")
-
-[node name="CubeGen" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7048748, -14.999394)
-script = ExtResource("6_qg7el")
-
-[node name="Timer" type="Timer" parent="CubeGen"]
-wait_time = 0.5
-autostart = true
 
 [connection signal="button_pressed" from="XROrigin3D/RightHand" to="XROrigin3D/RightHand" method="_on_button_pressed"]
 [connection signal="button_pressed" from="XROrigin3D/LeftHand" to="XROrigin3D/LeftHand" method="_on_button_pressed"]
-[connection signal="timeout" from="CubeGen/Timer" to="CubeGen" method="_on_timer_timeout"]
