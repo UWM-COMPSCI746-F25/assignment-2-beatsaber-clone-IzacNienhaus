@@ -11,8 +11,12 @@ func _process(delta: float) -> void:
 	
 func _on_area_3d_area_entered(area):
 	if area.name == "rightArea" && material == blue:
-		queue_free()
+		if area.get_parent().visible == true:
+			$AudioStreamPlayer3D.play()
+			$".".visible = false
 	elif area.name == "leftArea" && material == red:
-		queue_free()
+		if area.get_parent().visible == true:
+			$AudioStreamPlayer3D.play()
+			$".".visible = false
 	elif area.name == "backdrop":
 		queue_free()

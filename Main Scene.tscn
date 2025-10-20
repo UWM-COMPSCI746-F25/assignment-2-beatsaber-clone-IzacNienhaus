@@ -39,6 +39,7 @@ shadow_enabled = true
 transform = Transform3D(0.69761544, 0, 0.7164725, 0, 1, 0, -0.7164725, 0, 0.69761544, 6.4644003, 1.4526021, 0)
 
 [node name="backdrop" type="Area3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.4255896)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WorldEnvironment/backdrop"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.7330191)

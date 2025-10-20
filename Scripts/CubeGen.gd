@@ -22,8 +22,8 @@ func _on_timer_timeout() -> void:
 	randomize()
 	var chosen_material = materials.pick_random()
 	instance.material = chosen_material
-	instance.position.x = randf_range(-2, 2)
-	instance.position.y = randf_range(-2, 2)
+	instance.position.x = randf_range(-1, 1)
+	instance.position.y = randf_range(-1, 1)
 	
 	add_child(instance)
 	
